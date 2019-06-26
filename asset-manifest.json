@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.js": "/ts-match-score/static/js/main.2331dd3c.chunk.js",
+    "main.js.map": "/ts-match-score/static/js/main.2331dd3c.chunk.js.map",
+    "runtime~main.js": "/ts-match-score/static/js/runtime~main.a9135dd0.js",
+    "runtime~main.js.map": "/ts-match-score/static/js/runtime~main.a9135dd0.js.map",
+    "static/js/2.8daca2d1.chunk.js": "/ts-match-score/static/js/2.8daca2d1.chunk.js",
+    "static/js/2.8daca2d1.chunk.js.map": "/ts-match-score/static/js/2.8daca2d1.chunk.js.map",
+    "index.html": "/ts-match-score/index.html",
+    "precache-manifest.7d36b74461dc53877db309b4c53e22f7.js": "/ts-match-score/precache-manifest.7d36b74461dc53877db309b4c53e22f7.js",
+    "service-worker.js": "/ts-match-score/service-worker.js"
+  }
+}
