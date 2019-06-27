@@ -1,3 +1,7 @@
+.ForceGraph__NodeGroup {
+    transition: transform 100ms;
+}
+
 .ForceGraph__NodeCircle {
     stroke: black;
     stroke-width: 1;
@@ -17,4 +21,6 @@
 
 .ForceGraph__Links>line {
     stroke-width: 2;
+    transition: all 100ms;
+
 }
