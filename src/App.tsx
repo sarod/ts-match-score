@@ -168,13 +168,13 @@ export default function App() {
                 style={{ display: "flex", flexDirection: "row" }}
               >
                 <div>
-                  <Typography variant="h6">Iteration {reverseIndex}</Typography>
-                  <Typography variant="subtitle1">
+                  <Typography variant="h6">
                     {reverseIndex === 0
                       ? "Input State"
-                      : "Using paths through node " +
-                        iterationState.vertexName(reverseIndex) +
-                        ""}
+                      : "k=" +
+                        (reverseIndex - 1) +
+                        " - going through " +
+                        iterationState.vertexName(reverseIndex - 1)}
                   </Typography>
                   <GraphStateTable graphState={iterationState} />
 

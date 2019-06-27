@@ -9,18 +9,20 @@ export const initialState = (initialState: GraphState): ComputeState => ({
 });
 
 export const computeNextComputeState = (computeState: ComputeState) => {
-  const nextIterationIndex = computeState.iterations.length;
-  const lastIteration = computeState.iterations[nextIterationIndex - 1];
+  const k = computeState.iterations.length - 1;
+  const lastIteration = computeState.iterations[k];
   return {
     iterations: [
       ...computeState.iterations,
-      computeNextIteration(lastIteration, nextIterationIndex - 1)
+      computeNextIteration(lastIteration, k)
     ]
   };
 };
 
 export const needsAnotherIteration = (computeState: ComputeState) => {
-  return computeState.iterations.length < computeState.iterations[0].nbVertex();
+  return (
+    computeState.iterations.length < computeState.iterations[0].nbVertex() + 1
+  );
 };
 
 // Floyd-Warshall algorithm
@@ -29,10 +31,7 @@ const computeNextIteration = (
   graphState: GraphState,
   k: number
 ): GraphState => {
-  // Something IS WRONG!!!
-  // http://localhost:3000/?delay=0&edges=%7B%22A-B%22%3A100%2C%22A-C%22%3A100%2C%22A-D%22%3A100%2C%22A-E%22%3A100%2C%22A-F%22%3A100%2C%22A-G%22%3A100%7D
-
-  console.log("iteration" + k);
+  console.log("k (0 based): " + k);
   let newState = graphState;
   for (let i of range(newState.nbVertex())) {
     for (let j of range(newState.nbVertex())) {

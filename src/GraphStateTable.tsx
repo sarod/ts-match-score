@@ -2,9 +2,9 @@ import { TextField, Typography } from "@material-ui/core";
 import React, { ChangeEvent } from "react";
 
 import { colorForScore } from "./colorForScore";
-import { GraphState, isModifiable } from "./state/GraphState";
-import { range, round2Digits } from "./utils";
 import { ScoreDisplay } from "./ScoreBlock";
+import { GraphState, isModifiable } from "./state/GraphState";
+import { range } from "./utils";
 
 export const GraphStateTable = ({
   graphState,
@@ -20,7 +20,9 @@ export const GraphStateTable = ({
         {range(graphState.nbVertex()).map(
           (colIndex: number) =>
             colIndex >= 1 && (
-              <td key={colIndex}>{graphState.vertexName(colIndex)}</td>
+              <td key={colIndex} style={{ textAlign: "center" }}>
+                {graphState.vertexName(colIndex)}
+              </td>
             )
         )}
       </tr>
@@ -30,7 +32,9 @@ export const GraphStateTable = ({
         (rowIndex: number) =>
           rowIndex < graphState.nbVertex() - 1 && (
             <tr key={rowIndex}>
-              <td>{graphState.vertexName(rowIndex)}</td>
+              <td style={{ textAlign: "right" }}>
+                {graphState.vertexName(rowIndex)}
+              </td>
               {range(graphState.nbVertex()).map(
                 (colIndex: number) =>
                   colIndex >= 1 &&
