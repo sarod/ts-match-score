@@ -1,7 +1,7 @@
 import { range } from "./utils";
 import tinycolor from "tinycolor2";
-const red = tinycolor("red");
-const green = tinycolor("green");
+const red = tinycolor("#f44335");
+const green = tinycolor("#4caf50");
 const hueDelta = green.toHsv().h - red.toHsv().h;
 const colors = range(100).map(i => {
   const redHsv = red.toHsv();
@@ -11,7 +11,7 @@ const colors = range(100).map(i => {
   }).toRgbString();
 });
 // console.log("colors:", colors, "hueDelta", hueDelta);
-export const colorForScore100 = (score100: number) => {
+export const colorForScore = (score100: number) => {
   const rounded = Math.round(score100);
   if (rounded === 0) {
     return "";
@@ -19,6 +19,8 @@ export const colorForScore100 = (score100: number) => {
   return colors[rounded - 1];
 };
 
-export const colorForScore1 = (score1: number) => {
-  return colorForScore100(score1 * 100);
+export const contrastColorForScore = (score100: number) => {
+  return tinycolor
+    .mostReadable(colorForScore(score100), ["white", "black"])
+    .toString();
 };

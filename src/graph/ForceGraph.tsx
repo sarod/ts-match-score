@@ -6,7 +6,7 @@ import * as d3Selection from "d3-selection";
 
 import { GraphState } from "../state/GraphState";
 import { range } from "../utils";
-import { colorForScore100 } from "../colorForScore";
+import { colorForScore } from "../colorForScore";
 import { keyBy } from "lodash";
 
 type NodeDatum = SimulationNodeDatum & {
@@ -115,7 +115,7 @@ export const ForceGraph = ({
       .data(graphData.links)
       .enter()
       .append("line")
-      .attr("stroke", (d: LinkDatum) => colorForScore100(d.score));
+      .attr("stroke", (d: LinkDatum) => colorForScore(d.score));
     linkSel.append("title").text(function(d: LinkDatum) {
       return d.edgeId + ": " + d.score;
     });

@@ -1,3 +1,4 @@
+import "./App.css";
 import {
   Button,
   Checkbox,
@@ -6,8 +7,6 @@ import {
   Typography
 } from "@material-ui/core";
 import React, { ChangeEvent, useEffect } from "react";
-
-import { colorForScore100 } from "./colorForScore";
 import { ForceGraph } from "./graph/ForceGraph";
 import { GraphStateTable } from "./GraphStateTable";
 import {
@@ -23,7 +22,7 @@ import {
   graphStateFromUrl
 } from "./url/parseUrl";
 import { synchronizeUrl } from "./url/synchronizeUrl";
-import { round2Digits } from "./utils";
+import { ScoreDisplay } from "./ScoreBlock";
 
 export default function App() {
   const [autoCompute, setAutoCompute] = React.useState(autoComputeFromUrl());
@@ -196,9 +195,6 @@ export default function App() {
 
 const ConfidenceScore = ({ confidenceScore }: { confidenceScore: number }) => (
   <Typography variant="subtitle1">
-    Confidence Score:{" "}
-    <span style={{ backgroundColor: colorForScore100(confidenceScore) }}>
-      {round2Digits(confidenceScore)}
-    </span>
+    Confidence Score: <ScoreDisplay score={confidenceScore} />
   </Typography>
 );

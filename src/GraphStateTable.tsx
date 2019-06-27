@@ -1,9 +1,10 @@
-import { TextField } from "@material-ui/core";
+import { TextField, Typography } from "@material-ui/core";
 import React, { ChangeEvent } from "react";
 
-import { colorForScore100 } from "./colorForScore";
+import { colorForScore } from "./colorForScore";
 import { GraphState, isModifiable } from "./state/GraphState";
 import { range, round2Digits } from "./utils";
+import { ScoreDisplay } from "./ScoreBlock";
 
 export const GraphStateTable = ({
   graphState,
@@ -37,9 +38,10 @@ export const GraphStateTable = ({
                     <td
                       key={colIndex}
                       style={{
-                        backgroundColor: colorForScore100(
+                        backgroundColor: colorForScore(
                           graphState.score100(rowIndex, colIndex)
-                        )
+                        ),
+                        width: "50px"
                       }}
                     >
                       {onGraphStateChange ? (
@@ -47,7 +49,10 @@ export const GraphStateTable = ({
                           inputProps={{
                             min: "0",
                             max: "100",
-                            step: "5"
+                            step: "5",
+                            style: {
+                              textAlign: "right"
+                            }
                           }}
                           type="number"
                           value={graphState.score100(rowIndex, colIndex)}
@@ -65,11 +70,11 @@ export const GraphStateTable = ({
                           }}
                         />
                       ) : (
-                        <div>
-                          {round2Digits(
-                            graphState.score100(rowIndex, colIndex)
-                          )}
-                        </div>
+                        <Typography variant="subtitle1">
+                          <ScoreDisplay
+                            score={graphState.score100(rowIndex, colIndex)}
+                          />
+                        </Typography>
                       )}
                     </td>
                   ) : (
