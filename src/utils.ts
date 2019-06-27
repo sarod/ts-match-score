@@ -21,3 +21,7 @@ export const replaceSearchParams = (
 export const round2Digits = (number: number) => {
   return Math.round(number * 100) / 100;
 };
+
+export const alphaName = (index: number) => {
+  return String.fromCharCode("A".charCodeAt(0) + index);
+};

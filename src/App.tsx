@@ -1,55 +1,29 @@
 import {
   Button,
-  TextField,
-  Typography,
   Checkbox,
-  FormControlLabel
+  FormControlLabel,
+  TextField,
+  Typography
 } from "@material-ui/core";
 import React, { ChangeEvent, useEffect } from "react";
 
-import { emptyGraph, GraphState } from "./state/GraphState";
+import { colorForScore100 } from "./colorForScore";
+import { ForceGraph } from "./graph/ForceGraph";
 import { GraphStateTable } from "./GraphStateTable";
-import { SearchParams, replaceSearchParams, round2Digits } from "./utils";
 import {
+  computeNextComputeState,
   ComputeState,
   initialState as createInitialComputeState,
-  computeNextComputeState,
   needsAnotherIteration
 } from "./state/ComputeState";
-import { colorForScore100 } from "./colorForScore";
-
-const EDGES_PARAM = "edges";
-const graphStateFromUrl = (): GraphState => {
-  const params = new URLSearchParams(window.location.search);
-  if (params.has(EDGES_PARAM)) {
-    try {
-      return GraphState.fromEdgeScores(
-        JSON.parse(params.get(EDGES_PARAM) as string)
-      );
-    } catch (e) {}
-  }
-  return emptyGraph(7);
-};
-
-const DELAY_PARAM = "delay";
-const delayFromUrl = (): number => {
-  const params = new URLSearchParams(window.location.search);
-  if (params.has(DELAY_PARAM)) {
-    try {
-      return Number(params.get(DELAY_PARAM));
-    } catch (e) {}
-  }
-  return 300;
-};
-
-const AUTO_COMPUTE_PARAM = "auto";
-const autoComputeFromUrl = (): boolean => {
-  const params = new URLSearchParams(window.location.search);
-  if (params.has(AUTO_COMPUTE_PARAM)) {
-    return params.get(AUTO_COMPUTE_PARAM) === "true";
-  }
-  return false;
-};
+import { GraphState } from "./state/GraphState";
+import {
+  autoComputeFromUrl,
+  delayFromUrl,
+  graphStateFromUrl
+} from "./url/parseUrl";
+import { synchronizeUrl } from "./url/synchronizeUrl";
+import { round2Digits } from "./utils";
 
 export default function App() {
   const [autoCompute, setAutoCompute] = React.useState(autoComputeFromUrl());
@@ -112,7 +86,7 @@ export default function App() {
   return (
     <div className="App" style={{ display: "flex", height: "1vh" }}>
       <div>
-        <Typography variant="h6">Input</Typography>
+        <Typography variant="h5">Input</Typography>
         <TextField
           label="Node Count"
           type="number"
@@ -140,10 +114,11 @@ export default function App() {
           confidenceScore={inputState.computeConfidenceScore()}
         />
         <pre>{JSON.stringify(inputState.toEdgeScores(), null, "  ")}</pre>
+        <ForceGraph graphState={inputState}></ForceGraph>
       </div>
 
       <div>
-        <Typography variant="h6">New Confidence Score</Typography>
+        <Typography variant="h5">New Confidence Score</Typography>
         <div>
           <FormControlLabel
             control={
@@ -189,15 +164,28 @@ export default function App() {
             const iterationState = computeState.iterations[reverseIndex];
 
             return (
-              <div key={reverseIndex}>
-                <h3>
-                  Iteration {reverseIndex}
-                  {reverseIndex === 0 && " (Input State)"}
-                </h3>
-                <GraphStateTable graphState={iterationState} />
-                <ConfidenceScore
-                  confidenceScore={iterationState.computeConfidenceScore()}
-                />
+              <div
+                key={reverseIndex}
+                style={{ display: "flex", flexDirection: "row" }}
+              >
+                <div>
+                  <Typography variant="h6">Iteration {reverseIndex}</Typography>
+                  <Typography variant="subtitle1">
+                    {reverseIndex === 0
+                      ? "Input State"
+                      : "Using paths through node " +
+                        iterationState.vertexName(reverseIndex) +
+                        ""}
+                  </Typography>
+                  <GraphStateTable graphState={iterationState} />
+
+                  <ConfidenceScore
+                    confidenceScore={iterationState.computeConfidenceScore()}
+                  />
+                </div>
+                <div>
+                  <ForceGraph graphState={iterationState} />
+                </div>
               </div>
             );
           })}
@@ -214,19 +202,3 @@ const ConfidenceScore = ({ confidenceScore }: { confidenceScore: number }) => (
     </span>
   </Typography>
 );
-function synchronizeUrl(
-  delay: number,
-  autoCompute: boolean,
-  inputState: GraphState
-) {
-  const searchParams: SearchParams = {
-    [DELAY_PARAM]: String(delay),
-    [AUTO_COMPUTE_PARAM]: String(autoCompute),
-    [EDGES_PARAM]: JSON.stringify(inputState.toEdgeScores())
-  };
-  const originalHref = window.location.href;
-  const newHref = replaceSearchParams(originalHref, searchParams);
-  if (newHref !== originalHref) {
-    window.history.pushState("", "Update Params", newHref);
-  }
-}

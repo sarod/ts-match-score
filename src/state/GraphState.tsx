@@ -1,11 +1,11 @@
-import { range } from "../utils";
+import { range, alphaName } from "../utils";
 
 // export type GraphState = {
 //   nbVertex: number;
 //   scoreMatrix: ScoreMatrix;
 // };
 
-export type ScoreMatrix = number[][];
+export type ScoreMatrix = ReadonlyArray<ReadonlyArray<number>>;
 
 export class GraphState {
   public static fromEdgeScores(hgs: EdgeScores) {
@@ -40,11 +40,16 @@ export class GraphState {
     return state;
   }
 
-  constructor(
-    private vertexNames: string[],
+  private constructor(
+    public vertexNames: ReadonlyArray<string>,
     private readonly scoreMatrix: ScoreMatrix
   ) {}
 
+  public static createEmpty = (
+    vertexNames: ReadonlyArray<string>
+  ): GraphState => {
+    return new GraphState(vertexNames, []);
+  };
   public score100(x: number, y: number): number {
     if (x === y) {
       return 100;
@@ -68,7 +73,7 @@ export class GraphState {
     if (nbVertex < this.vertexNames.length) {
       return this.withVertexNames(this.vertexNames.slice(0, nbVertex));
     } else {
-      return this.withVertexNames(range(nbVertex).map(i => letter(i)));
+      return this.withVertexNames(range(nbVertex).map(alphaName));
     }
   }
   public withVertexNames(vertexNames: string[]): GraphState {
@@ -88,11 +93,17 @@ export class GraphState {
     } else {
       try {
         const matrix = this.scoreMatrix;
+        const normalized = this.normalize(newScore);
         const newRow = [...(matrix[x] || [])];
-        newRow[y] = this.normalize(newScore);
-        const newScores = [...matrix];
-        newScores[x] = newRow;
-        return new GraphState(this.vertexNames, newScores);
+        if (normalized === newRow[y]) {
+          // No change made
+          return this;
+        } else {
+          newRow[y] = normalized;
+          const newScores = [...matrix];
+          newScores[x] = newRow;
+          return new GraphState(this.vertexNames, newScores);
+        }
       } catch (e) {
         console.log(e);
         throw e;
@@ -101,7 +112,7 @@ export class GraphState {
   }
 
   public withResetedScores(): GraphState {
-    return new GraphState(this.vertexNames, []);
+    return GraphState.createEmpty(this.vertexNames);
   }
 
   public computeConfidenceScore() {
@@ -141,20 +152,11 @@ export const isModifiable = (x: number, y: number) => {
   return x < y;
 };
 
-export const emptyGraph = (nbVertex: number): GraphState => {
-  const vertexNames = range(nbVertex).map(i => letter(i));
-  return new GraphState(vertexNames, []);
-};
-
 export const vertexName = (
   graphState: GraphState,
   vertexIndex: number
 ): string => {
   return graphState.vertexName(vertexIndex);
-};
-
-const letter = (index: number) => {
-  return String.fromCharCode("A".charCodeAt(0) + index);
 };
 
 type EdgeScores = {

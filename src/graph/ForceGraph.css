@@ -1,0 +1,20 @@
+.ForceGraph__NodeCircle {
+    stroke: black;
+    stroke-width: 1;
+    stroke-opacity: 0.9;
+    fill: white;
+}
+
+.ForceGraph__NodeText {
+    font-family: "Roboto",
+        "Helvetica",
+        "Arial",
+        sans-serif;
+    text-anchor: middle;
+    dominant-baseline: middle;
+}
+
+
+.ForceGraph__Links>line {
+    stroke-width: 2;
+}
